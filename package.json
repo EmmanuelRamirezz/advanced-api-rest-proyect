@@ -1,0 +1,19 @@
+{
+  "name": "advanced-api-rest-proyect",
+  "version": "1.0.0",
+  "description": "Aplicacion de conceptos avanzados de api rest",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmmanuelRamirezz/advanced-api-rest-proyect.git"
+  },
+  "author": "Emmanuel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EmmanuelRamirezz/advanced-api-rest-proyect/issues"
+  },
+  "homepage": "https://github.com/EmmanuelRamirezz/advanced-api-rest-proyect#readme"
+}
