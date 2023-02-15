@@ -1,2 +1,2 @@
-const key = "llave_secreta";
+const key = "llave_secretas";
 
