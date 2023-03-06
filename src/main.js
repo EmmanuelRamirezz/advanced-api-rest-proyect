@@ -1,5 +1,5 @@
 //Archivo de Consumo de la API
-
+//Finished
 
 //Codigo DRY / helpers
 function movieContainerGenerator(place, data){
@@ -9,6 +9,11 @@ function movieContainerGenerator(place, data){
   
   const movieContainer = document.createElement('div');
   movieContainer.classList.add('movie-container');
+  
+  movieContainer.addEventListener('click', () =>{
+    location.hash = '#movie=' + movie.id
+    //al darle click a una pelicula nos manda al hash de movies con el id de la pelicula elegida
+  });
   
   const movieImg = document.createElement('img');
   movieImg.classList.add('movie-img');
@@ -87,6 +92,48 @@ async function getMoviesByCategory (id){
   movieContainerGenerator(genericSection, data);
 };
 
+async function getMoviesBySearch (query){
+  let {data} = await api('search/movie', {
+    params: {
+      query,
+    },
+  });
+  
+  movieContainerGenerator(genericSection, data);
+};
+async function getTrendingMovies(){
+  const res = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=' + API_KEY);
+  let data = await res.json();
+  const movies = data.results;
+  movieContainerGenerator(genericSection, data);
+};
+async function getMovieById(movieId){
+  const {data: movie} = await api('movie/'+movieId)
+  // recibimos un objeto 'data' y renombramos ese objeto como 'movie'. (así funciona axios)
+  const movieUrl = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
+  
+  headerSection.style.background=`
+  linear-gradient(180deg,
+     rgba(0, 0, 0, 0.35)19.27%,
+     rgba(0, 0, 0, 0) 29.17%),
+     
+  url(${movieUrl})`;
+  genericSection.style.display=`none`;
+
+  movieDetailTitle.innerHTML = movie.title
+  movieDetailScore.innerHTML = movie.vote_average
+  movieDetailDescription.innerHTML = movie.overview
+
+  createCategories(movieDetailCategoriesList, movie)
+  
+  getRelatedMovies(movieId)
+}
+async function getRelatedMovies(id){
+  const {data} = await api(`movie/${id}/similar`);
+  const relatedMovies = data.results;
+  
+  movieContainerGenerator(relatedMoviesContainer, data)
+}
 
 
 //Axios optimiza el codigo hace que sea mas corto, facil de leer y mantenible

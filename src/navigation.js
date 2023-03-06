@@ -3,14 +3,16 @@
 //hash: Es una herramienta que nos dice la url en la que estamos y la puede cambiar sin recargar la pagina dependiendo del usuario. agregando un '#' al final de la url
 //al darle al boton buscar activa la funcion search
 searchFormBtn.addEventListener('click', ()=>{
-  location.hash = '#search=';
+  location.hash = '#search=' + searchFormInput.value;
 });
 trendingBtn.addEventListener('click', ()=>{
   location.hash = '#trends';
 });
-//regreso
+logo.addEventListener('click', homePage);
 arrowBtn.addEventListener('click', ()=>{
-  location.hash = '#home';
+  history.back();
+  //nos guarda el historial y nos permite regresar
+  //location.hash = '#home';  (lleva siempre al home)
 });
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
@@ -27,7 +29,7 @@ function navigator(){
     movieDetailsPage();
   }else if(location.hash.startsWith('#category=')){
     categoriesPage();
-  }else{   
+  }else{
     homePage();
   }
   document.body.scrollTop = 0;
@@ -37,67 +39,80 @@ function navigator(){
 //Cada funcion muestra lo que queremos que el usuario vea dependiendo el hash.
 function trendsPage (){
   console.log('Estamos en trends');
+  logo.classList.remove('inactive');
 
   headerSection.classList.remove('header-container--long');
   headerSection.style.background = '';
   arrowBtn.classList.remove('inactive');
   arrowBtn.classList.remove('header-arrow--white');
-  headerTitle.classList.add('inactive');
   headerCategoryTitle.classList.remove('inactive');
   searchForm.classList.add('inactive');
- 
+
   trendingPreviewSection.classList.add('inactive');
   categoriesPreviewSection.classList.add('inactive');
+  genericSection.style.display=`block`;
   genericSection.classList.remove('inactive');
   movieDetailSelection.classList.add('inactive');
+  headerCategoryTitle.innerHTML="Trending"
+
+  getTrendingMovies();
 }
 function searchPage (){
   console.log('Estamos en search')
+  logo.classList.remove('inactive');
 
   headerSection.classList.remove('header-container--long');
   headerSection.style.background = '';
   arrowBtn.classList.remove('inactive');
   arrowBtn.classList.remove('header-arrow--white');
-  headerTitle.classList.add('inactive');
-  headerCategoryTitle.classList.remove('inactive');
+  headerCategoryTitle.classList.add('inactive');
   searchForm.classList.remove('inactive');
- 
+
   trendingPreviewSection.classList.add('inactive');
   categoriesPreviewSection.classList.add('inactive');
+  genericSection.style.display=`block`;
   genericSection.classList.remove('inactive');
   movieDetailSelection.classList.add('inactive');
+
+  const [_, query] = location.hash.split('=');
+  getMoviesBySearch(query);
 }
 function movieDetailsPage (){
   console.log('Estamos en movies')
-
-  headerSection.classList.remove('header-container--long');
+  headerSection.classList.add('header-container--long');
   headerSection.style.background = '';
   arrowBtn.classList.remove('inactive');
   arrowBtn.classList.add('header-arrow--white');
-  headerTitle.classList.add('inactive');
   headerCategoryTitle.classList.add('inactive');
   searchForm.classList.add('inactive');
- 
   trendingPreviewSection.classList.add('inactive');
   categoriesPreviewSection.classList.add('inactive');
   genericSection.classList.add('inactive');
   movieDetailSelection.classList.remove('inactive');
 
 
+  html.classList.add('white');
+  footer.classList.add('white');
+  const [_, movieId] = location.hash.split('=');
+  //location.hash nos trae un string '#movie=2313'. Lo que hacemos aquí es declarar un arreglo de 2 elementos donde separamos el string desde el signo de '='. obteniendo lo siguiente: [#movie, '2313'].
+ 
+  getMovieById(movieId);
+
 }
 function categoriesPage (){
-  console.log('Estamos en categories')
+  console.log('Estamos en categories');
+  logo.classList.remove('inactive');
 
   headerSection.classList.remove('header-container--long');
   headerSection.style.background = '';
   arrowBtn.classList.remove('inactive');
   arrowBtn.classList.remove('header-arrow--white');
-  headerTitle.classList.add('inactive');
   headerCategoryTitle.classList.remove('inactive');
   searchForm.classList.add('inactive');
- 
+
   trendingPreviewSection.classList.add('inactive');
   categoriesPreviewSection.classList.add('inactive');
+  genericSection.style.display=`block`;
   genericSection.classList.remove('inactive');
   movieDetailSelection.classList.add('inactive');
   const [_,categoryData] = location.hash.split('=');
@@ -110,6 +125,8 @@ function categoriesPage (){
 }
 function homePage (){
   console.log('Estamos en el HOME')
+  logo.classList.remove('inactive');
+
   headerSection.classList.remove('header-container--long');
   headerSection.style.background = '';
   arrowBtn.classList.add('inactive');
@@ -117,12 +134,16 @@ function homePage (){
   headerTitle.classList.remove('inactive');
   headerCategoryTitle.classList.add('inactive');
   searchForm.classList.remove('inactive');
- 
+
   trendingPreviewSection.classList.remove('inactive');
   categoriesPreviewSection.classList.remove('inactive');
   genericSection.classList.add('inactive');
+  genericSection.innerHTML = "";
   movieDetailSelection.classList.add('inactive');
-  
+
+  html.classList.remove('white');
+  footer.classList.remove('white');
+
 
   getTrendingMoviesPreview ()
   getCategoriesPreview()
